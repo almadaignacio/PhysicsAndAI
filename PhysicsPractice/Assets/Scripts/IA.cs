@@ -8,8 +8,7 @@ public class IA : MonoBehaviour
 {
     NavMeshAgent Agent;
     public Transform target;
-    public float distancia_ataque;
-    public bool atacando;
+    public float distanciaMinima;
     Animator animator;
 
     void Start()
@@ -22,7 +21,7 @@ public class IA : MonoBehaviour
     void Update()
     {
         Agent.SetDestination(target.position);
-        if(Vector3.Distance(transform.position, target.transform.position) > distancia_ataque)
+        if(Vector3.Distance(transform.position, target.transform.position) > distanciaMinima)
         {
             animator.SetBool("run", true);
         }

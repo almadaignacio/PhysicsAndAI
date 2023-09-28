@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Canon : MonoBehaviour
 {
@@ -13,64 +14,58 @@ public class Canon : MonoBehaviour
     public Rigidbody proyectileRb;
     public Text textForce;
     public Text textMass;
+    public Text textBullets;
+    public GameObject shootButton;
+    public GameObject backToShootButton;
+    public GameObject camera1;
+    public GameObject panelProperties;
+    public GameObject noBulletsLeft;
+    public GameObject restartButton;
+
+    public CheckInfo checkInfo;
+
+    public VerticalRotation sliderInfo;
+    public Slider verticalslider;
+
+    public int bullets;
+    bool canShoot;
+    public float x;
+    public float y;
+
+    public float startX;
+    public float startY;
+    public float startWeight;
+    public float startForce;
+
+    public Text infoText;
+    public Text yText;
+    public Text xText;
+
 
     private void Start()
     {
+        checkInfo = GameObject.FindGameObjectWithTag("CheckInfo").GetComponent<CheckInfo>();
         proyectileScript = GameObject.FindGameObjectWithTag("Proyectile").GetComponent<Proiyectile>(); 
         proyectileRb = GameObject.FindGameObjectWithTag("Proyectile").GetComponent<Rigidbody>();
+        
+        bullets = 5;
+        canShoot = true;
+
+        
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            GameObject fire = Instantiate(proyectile, proyectilePosition.position, proyectilePosition.rotation);
-        }
+        //canon.transform.Rotate(0, 0.5f, 0);
+        startX = sliderInfo.x;
+        startY = sliderInfo.y;
 
-        if (Input.GetKey(KeyCode.A))
-        {
-            baseCanon.transform.Rotate(0, -0.5f, 0);
-        }
+        infoText.text = "Last Shot: X: " + startX.ToString() + ", Y: " + startY.ToString() + ", Mass " + proyectileRb.mass.ToString() + ", Force " + proyectileScript.bulletForce.ToString();
 
-        if (Input.GetKey(KeyCode.D))
-        {
-            baseCanon.transform.Rotate(0, 0.5f, 0);
-        }
+        xText.text = "Y angle: " + startX.ToString();
+        yText.text = "X angle: " + startY.ToString();
 
-        if (Input.GetKey(KeyCode.W))
-        {
-            canon.transform.Rotate(0, -0.5f, 0);
-        }
-
-        if (Input.GetKey(KeyCode.S))
-        {
-            canon.transform.Rotate(0, 0.5f, 0);
-        }
-
-        textForce.text = proyectileScript.bulletForce.ToString();
-        textMass.text = proyectileRb.mass.ToString();
-
-        if (proyectileRb.mass <= 1)
-        {
-            proyectileRb.mass = 1;
-        } 
-
-        if(proyectileRb.mass >= 15)
-        {
-            proyectileRb.mass = 15;
-        }
-
-        if (proyectileScript.bulletForce <= 15)
-        {
-            proyectileScript.bulletForce = 15;
-        }
-
-        if (proyectileScript.bulletForce >= 75)
-        {
-            proyectileScript.bulletForce = 75;
-        }
-
-
+        Information();
     }
 
     public void ForcePlus()
@@ -92,4 +87,70 @@ public class Canon : MonoBehaviour
         proyectileRb.mass--;
     }
 
+    public void Horizontal(float newX)
+    {
+        x = newX;
+    }
+
+    public void Vertical(float newY)
+    {
+        y = newY;
+    }
+
+    public void Shoot()
+    {
+        GameObject fire = Instantiate(proyectile, proyectilePosition.position, proyectilePosition.rotation);
+        bullets--;
+    }
+
+    public void Information()
+    {
+        textForce.text = proyectileScript.bulletForce.ToString();
+        textMass.text = proyectileRb.mass.ToString();
+        textBullets.text = bullets.ToString();
+
+        if (proyectileRb.mass <= 1)
+        {
+            proyectileRb.mass = 1;
+        }
+
+        if (proyectileRb.mass >= 15)
+        {
+            proyectileRb.mass = 15;
+        }
+
+        if (proyectileScript.bulletForce <= 15)
+        {
+            proyectileScript.bulletForce = 15;
+        }
+
+        if (proyectileScript.bulletForce >= 75)
+        {
+            proyectileScript.bulletForce = 75;
+        }
+
+        if (bullets == 0)
+        {
+            shootButton.SetActive(false);
+            noBulletsLeft.SetActive(true);
+            restartButton.SetActive(true);
+        }
+    }
+
+    public void BackToShoot()
+    {
+        camera1.SetActive(false);
+        backToShootButton.SetActive(false);
+    }
+
+    public void ChangeView()
+    {
+        camera1.SetActive(true);
+        backToShootButton.SetActive(true);
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene("cañones");
+    }
 }

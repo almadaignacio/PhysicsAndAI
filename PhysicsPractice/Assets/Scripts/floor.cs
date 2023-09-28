@@ -3,19 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Objects : MonoBehaviour
+
+public class floor : MonoBehaviour
 {
     public Text UI;
     public int objectsBroken;
 
-    private void Start()
+    // Start is called before the first frame update
+    void Start()
     {
-       UI = GameObject.FindGameObjectWithTag("EditorOnly").GetComponent<Text>();
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.CompareTag("floor"))
+        if (collision.gameObject.CompareTag("barrel"))
         {
             objectsBroken++;
             Debug.Log("hit");
